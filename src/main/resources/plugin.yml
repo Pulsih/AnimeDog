@@ -1,0 +1,6 @@
+name: AnimeDog
+version: '${version}'
+main: me.pulsi_.animedog.AnimeDog
+api-version: 1.13
+load: STARTUP
+authors: [ Pulsi_ ]
