@@ -91,12 +91,12 @@ public class Listeners implements Listener {
 
             wolf.getWorld().playSound(wolf.getLocation(), Sound.ENTITY_PLAYER_HURT, 10, 1);
             entity.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, entity.getLocation(), 3);
-            ((Damageable) entity).damage(500, wolf);
+            ((Damageable) entity).damage(500, p);
 
-            Bukkit.getScheduler().runTaskLater(AnimeDog.getInstance(), () -> loopAttack(p, wolf), 3);
+            Bukkit.getScheduler().runTaskLater(AnimeDog.getInstance(), () -> loopAttack(p, wolf), 0);
             return;
         }
-        Bukkit.getScheduler().runTaskLater(AnimeDog.getInstance(), () -> loopAttack(p, wolf), 3);
+        Bukkit.getScheduler().runTaskLater(AnimeDog.getInstance(), () -> loopAttack(p, wolf), 0);
     }
 
     @EventHandler
@@ -125,19 +125,20 @@ public class Listeners implements Listener {
     private void attack(Player p, Wolf wolf, Damageable target) {
         if (wolf.isDead()) return;
 
-        Location loc1 = wolf.getLocation();
-        wolf.teleport(target.getLocation());
-        Location loc2 = wolf.getLocation();
-
-        spawnParticles(loc1, loc2);
-        wolf.getWorld().playSound(wolf.getLocation(), Sound.ENTITY_PLAYER_HURT, 10, 1);
-        target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation(), 3);
-        target.damage(500, wolf);
-
         List<Entity> nearbyEntities = wolf.getNearbyEntities(20, 20, 20);
-        for(Entity entity : nearbyEntities) {
+        for (Entity entity : nearbyEntities) {
             if (!(entity instanceof Damageable) || entity.isDead() || entity.equals(p) || dogs.contains(entity.getUniqueId())) continue;
-            Bukkit.getScheduler().runTaskLater(AnimeDog.getInstance(), () -> attack(p, wolf, (Damageable) entity), 3);
+
+            Location loc1 = wolf.getLocation();
+            wolf.teleport(target.getLocation());
+            Location loc2 = wolf.getLocation();
+
+            spawnParticles(loc1, loc2);
+            wolf.getWorld().playSound(wolf.getLocation(), Sound.ENTITY_PLAYER_HURT, 10, 1);
+            target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation(), 3);
+            target.damage(500, p);
+
+            Bukkit.getScheduler().runTaskLater(AnimeDog.getInstance(), () -> attack(p, wolf, (Damageable) entity), 0);
             return;
         }
     }
